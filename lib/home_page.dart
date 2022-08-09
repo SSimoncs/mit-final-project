@@ -18,6 +18,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<TransactionList> lstTransactions = [];
+  int _totalIn = 0;
+
 
   @override
   Widget build(BuildContext context) {
@@ -72,14 +74,14 @@ class _HomePageState extends State<HomePage> {
                               ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
+                                children:  [
                                   Text(
                                     'Income',
                                     style: TextStyle(color: Colors.grey),
                                   ),
                                   Text(
-                                    '\$100',
-                                    style: TextStyle(color: Colors.grey),
+                                      totalIncome().toString(),
+                                    style: const TextStyle(color: Colors.grey),
                                   ),
                                 ],
                               ),
@@ -135,6 +137,7 @@ class _HomePageState extends State<HomePage> {
                       itemBuilder: (context, index) {
                         var productName = lstTransactions[index].productName;
                         var category = lstTransactions[index].category;
+                        var price = lstTransactions[index].price;
                         return Card(
                           color: Colors.teal,
                           shape: RoundedRectangleBorder(
@@ -163,8 +166,8 @@ class _HomePageState extends State<HomePage> {
                             tileColor: Colors.black,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20.0)),
-                            trailing: const Text(
-                              '\$100',
+                            trailing:  Text(
+                              price.toString(),
                               style: TextStyle(color: Colors.green),
                             ),
                           ),
@@ -175,18 +178,17 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               FloatingActionButton(
-                onPressed: () {
-                  setState(() {
-                    InsertData();
-                  });
-                  // queryData().listen((value) {
-                  //   print('1st: $value');
-                  // });
-                  // showDialog(
-                  //     context: context,
-                  //     builder: (context) {
-                  //       return const AddPage();
-                  //     });
+                onPressed: () async {
+                   TransactionList? _transaction = await showDialog<TransactionList>(
+                      context: context,
+                      builder: (context) {
+                        return const AddPage();
+                      });
+                   if(_transaction ==null) return;
+                    setState(() {
+                      insertData(TransactionList(_transaction.productName,
+                          _transaction.category, _transaction.type, _transaction.price, 0));
+                    });
                 },
                 backgroundColor: Colors.black,
                 child: const Icon(

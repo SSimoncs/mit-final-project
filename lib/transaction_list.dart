@@ -1,9 +1,11 @@
 class TransactionList {
-   int id = 0;
-   String productName ='';
-   String category ='';
-   String type ='';
-   int price =0;
+   final int id ;
+   final String productName ;
+   final String category ;
+   final String type ;
+   final int price;
+
+   TransactionList(this.productName,this.category,this.type,this.price, this.id);
 
   TransactionList.fromJson(Map<String,dynamic> json)
    :  productName=json['product_name'],

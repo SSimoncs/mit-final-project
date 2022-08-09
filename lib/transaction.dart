@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:http/http.dart';
 import 'package:untitled/transaction_list.dart';
@@ -19,7 +20,17 @@ Stream<List<TransactionList>> queryData() async* {
   yield _transaction;
 }
 
-Future InsertData() async {
+int totalIncome(){
+  int _total = 0;
+  for(int i=1;i < transactions.length;i++){
+    _total += transactions[i].price;
+  }
+  log('total: $_total');
+  return _total;
+}
+
+Future insertData(TransactionList _trans) async {
+
   final response = await post(
     Uri.parse(url),
     headers: <String, String>{
@@ -28,13 +39,18 @@ Future InsertData() async {
     },
     body: jsonEncode(
       <String, String>{
-        'product_name': 'Test',
-        'type': 'EXPENSE',
-        'category': 'food',
-        'price': '200'
+        'product_name': _trans.productName,//'TEST5',
+        'type': _trans.type,//'EXPENSE',
+        'category': _trans.category,
+        'price': _trans.price.toString()
       },
     ),
   );
   print(response.body);
-  queryData();
+  await queryData();
+  print('Done');
+}
+
+String getData (String _txt){
+  return _txt;
 }
