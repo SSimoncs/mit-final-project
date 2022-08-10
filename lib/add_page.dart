@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:untitled/transaction.dart';
-import 'package:untitled/transaction_list.dart';
+import 'package:untitled/transaction_dataservice.dart';
+import 'package:untitled/transaction_model.dart';
 
 class AddPage extends StatefulWidget {
   const AddPage({Key? key}) : super(key: key);
@@ -115,6 +115,7 @@ class _AddPageState extends State<AddPage> {
                   TextField(
                     style: TextStyle(color: Colors.white),
                     controller: txtPrice,
+                    keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
                       focusColor: Colors.red,
                       focusedBorder: OutlineInputBorder(
@@ -142,7 +143,7 @@ class _AddPageState extends State<AddPage> {
               OutlinedButton(
                 onPressed: () {
                   Navigator.of(context).pop(
-                    TransactionList(txtProductName.text, txtCategory.text,
+                    TransactionModel(txtProductName.text, txtCategory.text,
                         _isSwitch == true?'INCOME':'EXPENSE', int.parse(txtPrice.text), 0),
                   );
                 },

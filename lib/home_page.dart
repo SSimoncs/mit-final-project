@@ -4,8 +4,8 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:untitled/transaction.dart';
-import 'package:untitled/transaction_list.dart';
+import 'package:untitled/transaction_dataservice.dart';
+import 'package:untitled/transaction_model.dart';
 
 import 'add_page.dart';
 
@@ -17,7 +17,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<TransactionList> lstTransactions = [];
+  List<TransactionModel> lstTransactions = [];
   int _totalIn = 0;
   int _totalEx = 0;
 
@@ -133,7 +133,7 @@ class _HomePageState extends State<HomePage> {
                 height: 20.0,
               ),
               Flexible(
-                child: StreamBuilder<List<TransactionList>>(
+                child: StreamBuilder<List<TransactionModel>>(
                   stream: queryData(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
@@ -197,14 +197,14 @@ class _HomePageState extends State<HomePage> {
               ),
               FloatingActionButton(
                 onPressed: () async {
-                  TransactionList? _transaction =
-                      await showDialog<TransactionList>(
+                  TransactionModel? _transaction =
+                      await showDialog<TransactionModel>(
                           context: context,
                           builder: (context) {
                             return const AddPage();
                           });
                   if (_transaction == null) return;
-                  await insertData(TransactionList(
+                  await insertData(TransactionModel(
                       _transaction.productName,
                       _transaction.category,
                       _transaction.type,
