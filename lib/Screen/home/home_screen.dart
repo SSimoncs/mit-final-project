@@ -1,22 +1,17 @@
-import 'dart:async';
-import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:untitled/transaction.dart';
 import 'package:untitled/transaction_list.dart';
 
-import 'add_page.dart';
-
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeScreenState extends State<HomeScreen> {
   List<TransactionList> lstTransactions = [];
 
   @override
@@ -49,10 +44,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       const Text(
                         'BALANCE',
-                        style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 20.0,
-                            letterSpacing: 5.0),
+                        style: TextStyle(color: Colors.grey, fontSize: 20.0, letterSpacing: 5.0),
                       ),
                       const Text(
                         '\$ 2000',
@@ -161,8 +153,7 @@ class _HomePageState extends State<HomePage> {
                               style: const TextStyle(color: Colors.grey),
                             ),
                             tileColor: Colors.black,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0)),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                             trailing: const Text(
                               '\$100',
                               style: TextStyle(color: Colors.green),
