@@ -1,18 +1,37 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
-
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:untitled/transaction.dart';
-import 'package:untitled/transaction_list.dart';
+import 'package:http/http.dart';
+import 'package:untitled/transaction_dataservice.dart';
+import 'package:untitled/transaction_model.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+import 'add_page.dart';
+
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  List<TransactionList> lstTransactions = [];
+class _HomePageState extends State<HomePage> {
+  List<TransactionModel> lstTransactions = [];
+  double _totalIn = 0;
+  num _totalEx = 0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getTotal().whenComplete(() {
+      setState(() {
+        _totalIn = totalIncome();
+        _totalEx = totalExpense();
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,11 +63,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       const Text(
                         'BALANCE',
-                        style: TextStyle(color: Colors.grey, fontSize: 20.0, letterSpacing: 5.0),
+                        style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 20.0,
+                            letterSpacing: 5.0),
                       ),
-                      const Text(
-                        '\$ 2000',
-                        style: TextStyle(color: Colors.grey, fontSize: 45.0),
+                       Text(
+                        (_totalIn.toDouble() - _totalEx.toDouble()).toString(),
+                        style: const TextStyle(color: Colors.grey, fontSize: 45.0),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -64,14 +86,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
-                                  Text(
+                                children: [
+                                  const Text(
                                     'Income',
                                     style: TextStyle(color: Colors.grey),
                                   ),
                                   Text(
-                                    '\$100',
-                                    style: TextStyle(color: Colors.grey),
+                                    _totalIn.toDouble().toString()+' \$',
+                                    style: const TextStyle(color: Colors.grey),
                                   ),
                                 ],
                               ),
@@ -88,14 +110,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
-                                  Text(
+                                children: [
+                                  const Text(
                                     'Expense',
                                     style: TextStyle(color: Colors.grey),
                                   ),
                                   Text(
-                                    '\$50',
-                                    style: TextStyle(color: Colors.grey),
+                                    _totalEx.toDouble().toString()+' \$',
+                                    style: const TextStyle(color: Colors.grey),
                                   ),
                                 ],
                               ),
@@ -111,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 20.0,
               ),
               Flexible(
-                child: StreamBuilder<List<TransactionList>>(
+                child: StreamBuilder<List<TransactionModel>>(
                   stream: queryData(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
@@ -127,6 +149,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemBuilder: (context, index) {
                         var productName = lstTransactions[index].productName;
                         var category = lstTransactions[index].category;
+                        var price = lstTransactions[index].price;
+                        var type = lstTransactions[index].type;
                         return Card(
                           color: Colors.teal,
                           shape: RoundedRectangleBorder(
@@ -153,10 +177,16 @@ class _HomeScreenState extends State<HomeScreen> {
                               style: const TextStyle(color: Colors.grey),
                             ),
                             tileColor: Colors.black,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                            trailing: const Text(
-                              '\$100',
-                              style: TextStyle(color: Colors.green),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0)),
+                            trailing: Text(
+                              type == 'INCOME'
+                                  ? '+' + price.toString()
+                                  : '-' + price.toString(),
+                              style: TextStyle(
+                                  color: type == 'INCOME'
+                                      ? Colors.green
+                                      : Colors.red),
                             ),
                           ),
                         );
@@ -166,18 +196,26 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               FloatingActionButton(
-                onPressed: () {
+                onPressed: () async {
+                  TransactionModel? _transaction =
+                      await showDialog<TransactionModel>(
+                          context: context,
+                          builder: (context) {
+                            return const AddPage();
+                          });
+                  if (_transaction == null) return;
+                  await insertData(TransactionModel(
+                      _transaction.productName,
+                      _transaction.category,
+                      _transaction.type,
+                      _transaction.price,
+                      0));
+                  log('TransactionList on button: ${lstTransactions.length}');
+                  //getTotal();
                   setState(() {
-                    InsertData();
+                    _totalIn = totalIncome();
+                    log('test: $_totalIn');
                   });
-                  // queryData().listen((value) {
-                  //   print('1st: $value');
-                  // });
-                  // showDialog(
-                  //     context: context,
-                  //     builder: (context) {
-                  //       return const AddPage();
-                  //     });
                 },
                 backgroundColor: Colors.black,
                 child: const Icon(
