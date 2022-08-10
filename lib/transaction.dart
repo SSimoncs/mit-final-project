@@ -9,7 +9,7 @@ List<TransactionList> transactions = [];
 
 Stream<List<TransactionList>> queryData() async* {
   final response = await get(Uri.parse(url), headers: {
-    'Authorization': 'bearer 3efea034-a5b9-46a1-980a-c9d1a2523631'
+    'Authorization': 'bearer 175ed59a-ecdb-4566-9a8a-8be5be3010a2'
   });
   final Map<String, dynamic> map = json.decode(response.body);
   var jsonData = map["body"] as List;
