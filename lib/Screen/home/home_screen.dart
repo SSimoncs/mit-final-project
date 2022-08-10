@@ -1,13 +1,10 @@
-import 'dart:async';
-import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:untitled/transaction_dataservice.dart';
 import 'package:untitled/transaction_model.dart';
 
-import 'add_page.dart';
+import '../../add_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -63,12 +60,9 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       const Text(
                         'BALANCE',
-                        style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 20.0,
-                            letterSpacing: 5.0),
+                        style: TextStyle(color: Colors.grey, fontSize: 20.0, letterSpacing: 5.0),
                       ),
-                       Text(
+                      Text(
                         (_totalIn.toDouble() - _totalEx.toDouble()).toString(),
                         style: const TextStyle(color: Colors.grey, fontSize: 45.0),
                       ),
@@ -92,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                                     style: TextStyle(color: Colors.grey),
                                   ),
                                   Text(
-                                    _totalIn.toDouble().toString()+' \$',
+                                    _totalIn.toDouble().toString() + ' \$',
                                     style: const TextStyle(color: Colors.grey),
                                   ),
                                 ],
@@ -116,7 +110,7 @@ class _HomePageState extends State<HomePage> {
                                     style: TextStyle(color: Colors.grey),
                                   ),
                                   Text(
-                                    _totalEx.toDouble().toString()+' \$',
+                                    _totalEx.toDouble().toString() + ' \$',
                                     style: const TextStyle(color: Colors.grey),
                                   ),
                                 ],
@@ -177,16 +171,10 @@ class _HomePageState extends State<HomePage> {
                               style: const TextStyle(color: Colors.grey),
                             ),
                             tileColor: Colors.black,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0)),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                             trailing: Text(
-                              type == 'INCOME'
-                                  ? '+' + price.toString()
-                                  : '-' + price.toString(),
-                              style: TextStyle(
-                                  color: type == 'INCOME'
-                                      ? Colors.green
-                                      : Colors.red),
+                              type == 'INCOME' ? '+' + price.toString() : '-' + price.toString(),
+                              style: TextStyle(color: type == 'INCOME' ? Colors.green : Colors.red),
                             ),
                           ),
                         );
@@ -197,19 +185,14 @@ class _HomePageState extends State<HomePage> {
               ),
               FloatingActionButton(
                 onPressed: () async {
-                  TransactionModel? _transaction =
-                      await showDialog<TransactionModel>(
-                          context: context,
-                          builder: (context) {
-                            return const AddPage();
-                          });
+                  TransactionModel? _transaction = await showDialog<TransactionModel>(
+                      context: context,
+                      builder: (context) {
+                        return const AddPage();
+                      });
                   if (_transaction == null) return;
                   await insertData(TransactionModel(
-                      _transaction.productName,
-                      _transaction.category,
-                      _transaction.type,
-                      _transaction.price,
-                      0));
+                      _transaction.productName, _transaction.category, _transaction.type, _transaction.price, 0));
                   log('TransactionList on button: ${lstTransactions.length}');
                   //getTotal();
                   setState(() {

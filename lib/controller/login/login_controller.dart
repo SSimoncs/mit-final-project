@@ -10,7 +10,7 @@ class LoginController {
       debugPrint("Successful");
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        MaterialPageRoute(builder: (context) => const HomePage()),
       );
     });
   }

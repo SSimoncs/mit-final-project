@@ -4,14 +4,16 @@ import 'dart:developer';
 import 'package:http/http.dart';
 import 'package:untitled/transaction_model.dart';
 
-const url =
-    "http://ec2-3-111-246-190.ap-south-1.compute.amazonaws.com:8080/demo/api/product";
-var header = 'bearer 175ed59a-ecdb-4566-9a8a-8be5be3010a2';
+import 'helper/Setting.dart';
+
+final token = Setting.newInstance()?.token;
+
+const url = "http://ec2-3-111-246-190.ap-south-1.compute.amazonaws.com:8080/demo/api/product";
+var header = 'bearer $token';
 List<TransactionModel> transactions = [];
 
 Stream<List<TransactionModel>> queryData() async* {
-  final response =
-      await get(Uri.parse(url), headers: {'Authorization': header});
+  final response = await get(Uri.parse(url), headers: {'Authorization': header});
   final Map<String, dynamic> map = json.decode(response.body);
   var jsonData = map["body"] as List;
   var _transaction = jsonData.map((e) => TransactionModel.fromJson(e)).toList();
@@ -20,8 +22,7 @@ Stream<List<TransactionModel>> queryData() async* {
 }
 
 Future getTotal() async {
-  final response =
-      await get(Uri.parse(url), headers: {'Authorization': header});
+  final response = await get(Uri.parse(url), headers: {'Authorization': header});
   final Map<String, dynamic> map = json.decode(response.body);
   var jsonData = map["body"] as List;
   transactions = jsonData.map((e) => TransactionModel.fromJson(e)).toList();
@@ -48,10 +49,7 @@ double totalExpense() {
 Future insertData(TransactionModel _trans) async {
   final response = await post(
     Uri.parse(url),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': 'bearer 175ed59a-ecdb-4566-9a8a-8be5be3010a2'
-    },
+    headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8', 'Authorization': 'bearer $token'},
     body: jsonEncode(
       <String, String>{
         'product_name': _trans.productName, //'TEST5',

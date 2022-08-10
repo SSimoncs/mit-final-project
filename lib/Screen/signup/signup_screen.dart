@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:untitled/Screen/signup/signup_screen.dart';
-import 'package:untitled/controller/login/login_controller.dart';
+import 'package:untitled/Screen/login/login_screen.dart';
+import 'package:untitled/controller/signup/signup_controller.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class SignUpScreen extends StatelessWidget {
+  const SignUpScreen({Key? key}) : super(key: key);
 
   static const String _title = '';
 
@@ -30,7 +30,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  final loginController = LoginController();
+  final signupController = SignupController();
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   alignment: Alignment.center,
                   padding: const EdgeInsets.all(10),
                   child: const Text(
-                    'Sign in',
+                    'Sign Up',
                     style: TextStyle(fontSize: 20),
                   )),
               Container(
@@ -64,7 +64,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 child: TextFormField(
                   controller: nameController,
                   validator: (va) {
-                    if (va == "") return "GG";
+                    if (va == "") return "Username must not empty";
                   },
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
@@ -89,19 +89,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 ),
               ),
               Container(
-                width: MediaQuery.of(context).size.width,
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {
-                    //forgot password screen
-                  },
-                  child: const Text(
-                    'Forgot Password',
-                    textAlign: TextAlign.end,
-                  ),
-                ),
-              ),
-              Container(
                   height: 50,
                   margin: const EdgeInsets.only(top: 24, bottom: 12),
                   width: MediaQuery.of(context).size.width,
@@ -112,7 +99,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: TextButton(
                     child: const Text(
-                      'Login',
+                      'Register',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.white,
@@ -121,22 +108,22 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     ),
                     onPressed: () {
                       if (_formKey.currentState?.validate() == true) {
-                        loginController.login(context, nameController.text, passwordController.text);
+                        signupController.signup(context, nameController.text, passwordController.text);
                       }
                     },
                   )),
               Row(
                 children: <Widget>[
-                  const Text('Does not have account?'),
+                  const Text('Already have account?'),
                   TextButton(
                     child: const Text(
-                      'Sign Up',
+                      'Go to login',
                       style: TextStyle(fontSize: 20),
                     ),
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const SignUpScreen()),
+                        MaterialPageRoute(builder: (context) => const LoginScreen()),
                       );
                     },
                   )
