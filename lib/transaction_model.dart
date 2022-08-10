@@ -3,7 +3,7 @@ class TransactionModel {
    final String productName ;
    final String category ;
    final String type ;
-   final int price;
+   final double price;
 
    TransactionModel(this.productName,this.category,this.type,this.price, this.id);
 
@@ -11,6 +11,6 @@ class TransactionModel {
    :  productName=json['product_name'],
       category=json['category'],
       type=json['type'],
-      price=json['price'],
+      price=json['price'].toDouble(),
       id=json['id'];
 }

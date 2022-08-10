@@ -18,8 +18,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<TransactionModel> lstTransactions = [];
-  int _totalIn = 0;
-  int _totalEx = 0;
+  double _totalIn = 0;
+  num _totalEx = 0;
 
   @override
   void initState() {
@@ -69,7 +69,7 @@ class _HomePageState extends State<HomePage> {
                             letterSpacing: 5.0),
                       ),
                        Text(
-                        (_totalIn - _totalEx).toString(),
+                        (_totalIn.toDouble() - _totalEx.toDouble()).toString(),
                         style: const TextStyle(color: Colors.grey, fontSize: 45.0),
                       ),
                       Row(
@@ -92,7 +92,7 @@ class _HomePageState extends State<HomePage> {
                                     style: TextStyle(color: Colors.grey),
                                   ),
                                   Text(
-                                    _totalIn.toString()+' \$',
+                                    _totalIn.toDouble().toString()+' \$',
                                     style: const TextStyle(color: Colors.grey),
                                   ),
                                 ],
@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                                     style: TextStyle(color: Colors.grey),
                                   ),
                                   Text(
-                                    _totalEx.toString()+' \$',
+                                    _totalEx.toDouble().toString()+' \$',
                                     style: const TextStyle(color: Colors.grey),
                                   ),
                                 ],

@@ -27,8 +27,8 @@ Future getTotal() async {
   transactions = jsonData.map((e) => TransactionModel.fromJson(e)).toList();
 }
 
-int totalIncome() {
-  int _total = 0;
+double totalIncome() {
+  double _total = 0;
   for (int i = 1; i < transactions.length; i++) {
     _total += transactions[i].type == 'INCOME' ? transactions[i].price : 0;
   }
@@ -36,8 +36,8 @@ int totalIncome() {
   return _total;
 }
 
-int totalExpense() {
-  int _total = 0;
+double totalExpense() {
+  double _total = 0;
   for (int i = 1; i < transactions.length; i++) {
     _total += transactions[i].type == 'EXPENSE' ? transactions[i].price : 0;
   }

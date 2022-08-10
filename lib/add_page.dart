@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:untitled/transaction_dataservice.dart';
 import 'package:untitled/transaction_model.dart';
 
@@ -79,43 +80,49 @@ class _AddPageState extends State<AddPage> {
                     ],
                   ),
                   TextField(
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
+                    autofocus: true,
                     controller: txtProductName,
-                    decoration: const InputDecoration(
+                    decoration:  InputDecoration(
                       focusColor: Colors.red,
                       focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(4)),
-                        borderSide: BorderSide(width: 1, color: Colors.green),
+                        borderRadius: const BorderRadius.all(Radius.circular(4)),
+                        borderSide: BorderSide(
+                            width: 1,
+                            color:
+                                _isSwitch == true ? Colors.green : Colors.red),
                       ),
-                      enabledBorder: OutlineInputBorder(
+                      enabledBorder: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(4)),
                         borderSide: BorderSide(width: 3, color: Colors.grey),
                       ),
-                      hintText: 'ProductName',
-                      hintStyle: TextStyle(fontSize: 15.0, color: Colors.grey),
+                      hintText: 'Transaction Name',
+                      hintStyle: const TextStyle(fontSize: 15.0, color: Colors.grey),
                     ),
                   ),
                   TextField(
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                     controller: txtCategory,
-                    decoration: const InputDecoration(
+                    decoration:  InputDecoration(
                       focusColor: Colors.red,
                       focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(4)),
-                        borderSide: BorderSide(width: 1, color: Colors.green),
+                        borderRadius: const BorderRadius.all(Radius.circular(4)),
+                        borderSide: BorderSide(width: 1, color :_isSwitch == true ? Colors.green : Colors.red),
                       ),
-                      enabledBorder: OutlineInputBorder(
+                      enabledBorder: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(4)),
                         borderSide: BorderSide(width: 3, color: Colors.grey),
                       ),
                       hintText: 'Category',
-                      hintStyle: TextStyle(fontSize: 15.0, color: Colors.grey),
+                      hintStyle: const TextStyle(fontSize: 15.0, color: Colors.grey),
                     ),
                   ),
                   TextField(
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                     controller: txtPrice,
-                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
+                    ],
                     decoration: const InputDecoration(
                       focusColor: Colors.red,
                       focusedBorder: OutlineInputBorder(
@@ -143,8 +150,12 @@ class _AddPageState extends State<AddPage> {
               OutlinedButton(
                 onPressed: () {
                   Navigator.of(context).pop(
-                    TransactionModel(txtProductName.text, txtCategory.text,
-                        _isSwitch == true?'INCOME':'EXPENSE', int.parse(txtPrice.text), 0),
+                    TransactionModel(
+                        txtProductName.text,
+                        txtCategory.text,
+                        _isSwitch == true ? 'INCOME' : 'EXPENSE',
+                        double.parse(txtPrice.text),
+                        0),
                   );
                 },
                 child: const Text('Add'),
