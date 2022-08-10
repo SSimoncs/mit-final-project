@@ -19,7 +19,19 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<TransactionList> lstTransactions = [];
   int _totalIn = 0;
+  int _totalEx = 0;
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getTotal().whenComplete(() {
+      setState(() {
+        _totalIn = totalIncome();
+        _totalEx = totalExpense();
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,9 +68,9 @@ class _HomePageState extends State<HomePage> {
                             fontSize: 20.0,
                             letterSpacing: 5.0),
                       ),
-                      const Text(
-                        '\$ 2000',
-                        style: TextStyle(color: Colors.grey, fontSize: 45.0),
+                       Text(
+                        (_totalIn - _totalEx).toString(),
+                        style: const TextStyle(color: Colors.grey, fontSize: 45.0),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -74,13 +86,13 @@ class _HomePageState extends State<HomePage> {
                               ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children:  [
-                                  Text(
+                                children: [
+                                  const Text(
                                     'Income',
                                     style: TextStyle(color: Colors.grey),
                                   ),
                                   Text(
-                                      totalIncome().toString(),
+                                    _totalIn.toString()+' \$',
                                     style: const TextStyle(color: Colors.grey),
                                   ),
                                 ],
@@ -98,14 +110,14 @@ class _HomePageState extends State<HomePage> {
                               ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
-                                  Text(
+                                children: [
+                                  const Text(
                                     'Expense',
                                     style: TextStyle(color: Colors.grey),
                                   ),
                                   Text(
-                                    '\$50',
-                                    style: TextStyle(color: Colors.grey),
+                                    _totalEx.toString()+' \$',
+                                    style: const TextStyle(color: Colors.grey),
                                   ),
                                 ],
                               ),
@@ -138,6 +150,7 @@ class _HomePageState extends State<HomePage> {
                         var productName = lstTransactions[index].productName;
                         var category = lstTransactions[index].category;
                         var price = lstTransactions[index].price;
+                        var type = lstTransactions[index].type;
                         return Card(
                           color: Colors.teal,
                           shape: RoundedRectangleBorder(
@@ -166,9 +179,14 @@ class _HomePageState extends State<HomePage> {
                             tileColor: Colors.black,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20.0)),
-                            trailing:  Text(
-                              price.toString(),
-                              style: TextStyle(color: Colors.green),
+                            trailing: Text(
+                              type == 'INCOME'
+                                  ? '+' + price.toString()
+                                  : '-' + price.toString(),
+                              style: TextStyle(
+                                  color: type == 'INCOME'
+                                      ? Colors.green
+                                      : Colors.red),
                             ),
                           ),
                         );
@@ -179,16 +197,25 @@ class _HomePageState extends State<HomePage> {
               ),
               FloatingActionButton(
                 onPressed: () async {
-                   TransactionList? _transaction = await showDialog<TransactionList>(
-                      context: context,
-                      builder: (context) {
-                        return const AddPage();
-                      });
-                   if(_transaction ==null) return;
-                    setState(() {
-                      insertData(TransactionList(_transaction.productName,
-                          _transaction.category, _transaction.type, _transaction.price, 0));
-                    });
+                  TransactionList? _transaction =
+                      await showDialog<TransactionList>(
+                          context: context,
+                          builder: (context) {
+                            return const AddPage();
+                          });
+                  if (_transaction == null) return;
+                  await insertData(TransactionList(
+                      _transaction.productName,
+                      _transaction.category,
+                      _transaction.type,
+                      _transaction.price,
+                      0));
+                  log('TransactionList on button: ${lstTransactions.length}');
+                  //getTotal();
+                  setState(() {
+                    _totalIn = totalIncome();
+                    log('test: $_totalIn');
+                  });
                 },
                 backgroundColor: Colors.black,
                 child: const Icon(
