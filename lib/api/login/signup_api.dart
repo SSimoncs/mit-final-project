@@ -6,7 +6,7 @@ import '../../helper/Throwable.dart';
 
 class SignUpAPI extends AbsAPI {
   Future<bool> signup(String username, String password) async {
-    final res = await client.post("/api/user", body: {username: username, password: password});
+    final res = await client.post("/api/user/register", body: {'username': username, 'password': password});
     if (res.statusCode == 200) {
       return true;
     } else {
